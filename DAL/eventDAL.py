@@ -2,32 +2,53 @@ import requests # pip install requests
 import json
 from requests.exceptions import ConnectionError
 from utils.DateTime import DateTime
+from settings import URL, USER, PASSWD
 
 class ApiUrl:
     def __init__(self):
-        self.url = "http://10.0.0.205:8000/event/"
+        self.url = URL + "event/"
         self.monitor = self.url + "monitor/"
         self.running = self.url + "running/"
         self.waiting = self.url + "waiting/"
         self.completed = self.url + "completed/"
         self.event_monitor = self.url + "event_monitor/"
+        self.scc = URL + "scc/"
 
     def get(self, url):
         try:
-            rsp = requests.get(url, timeout=2)
+            rsp = requests.get(url, auth=HTTPBasicAuth(USER, PASSWD), timeout=5)
         except ConnectionError as e:
             return e
         if rsp.status_code == 200:
             return rsp.text
-        elif rsp.status_code == 502:
-            return "Bad gateway. Check your proxy or wweb services"
+        elif rsp.status_code >= 500:
+            return "Check your proxy or web services"
         else:
             return "Unknow"
 
     def put(self, url, data):
-        rsp = requests.put(url, json = data, timeout = 2)
-        return rsp.status_code
+        try:
+            rsp = requests.put(url, json = data, auth=HTTPBasicAuth(USER, PASSWD), timeout=5)
+        except ConnectionError as e:
+            return e
+        if rsp.status_code == 200:
+            return rsp.text
+        elif rsp.status_code >= 500:
+            return "Check your proxy or web services"
+        else:
+            return "Unknow"
 
+    def post(self, url, data):
+        try:
+            rsp = requests.put(url, json = data, auth=HTTPBasicAuth(USER, PASSWD), timeout=5)
+        except ConnectionError as e:
+            return e
+        if rsp.status_code == 200:
+            return rsp.text
+        elif rsp.status_code >= 500:
+            return "Check your proxy or web services"
+        else:
+            return "Unknow"
 
 class EventDAL:
     def __init__(self):
@@ -64,3 +85,10 @@ class EventMonitorDAL:
         rsp = api_url.get(url)
         return rsp
 
+class SccDAL:
+    def __init__(self):
+        self.api_url = ApiUrl()
+    def post(self, data):
+        return self.api_url.post(self.api_url.scc, data)
+        
+        

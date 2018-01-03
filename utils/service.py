@@ -7,6 +7,7 @@ from setting.settings import LIMIT_PING_TIME
 from utils.DateTime import DateTime
 import subprocess # pip install subprocess.run
 from DAL.eventDAL import EventMonitorDAL
+from BLL.eventBLL import SccBLL
 
 
 # Exit statuses recognized by Nagios
@@ -80,18 +81,19 @@ class Service:
             return OK, message
         return CRITICAL, message
 
-    def push_notification(self, now, ishost, AlertStatus, msg):
+    def push_notification(self, ishost, AlertStatus, msg):
         args = []
         date_time = DateTime()
         args.append({
             'ishost'            : ishost,
             'queueServiceName'  : self.my_event["service_check_name"],
-            'settingTime'       : now,
             'queueHost'         : self.my_event["encoder"] + '-' + self.my_event["event_name"], 
             'msg'               : msg,
             'AlertStatus'       : AlertStatus
             })
         data = json.dumps(args)
+        scc = SccBLL()
+        scc.post(data)
         print data
         return 0
 
@@ -120,9 +122,7 @@ class Service:
             self.my_event["status"] = status
             AlertStatus = self.get_alert_status(status)
             msg = "%s - %s"%(AlertStatus, msg)
-            date_time = DateTime()
-            now = date_time.get_now_as_human_creadeble()
-            self.push_notification(now, ishost, AlertStatus, msg)
+            self.push_notification(ishost, AlertStatus, msg)
             self.update_status(status)
             return 1
         return 0
