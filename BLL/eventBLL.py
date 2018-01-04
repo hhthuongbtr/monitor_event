@@ -1,5 +1,6 @@
 from DAL.eventDAL import EventDAL
 from DAL.eventDAL import SccDAL
+from DAL.eventDAL import EventMonitorDAL
 
 class EventBLL:
     def __init__(self):
@@ -19,6 +20,21 @@ class EventBLL:
 
     def get_event_monitor(self, pk):
         return self.event.get_event_monitor(pk)
+
+class EventMonitorBLL:
+    def __init__(self):
+        self.event_monitor = EventMonitorDAL()
+
+    def put(self, pk, data):
+        rsp = self.event_monitor.put(url, data)
+        return rsp
+
+    def get(self, pk=None):
+        if pk:
+            rsp = self.event_monitor.get(pk)
+        else:
+            rsp = self.event_monitor.get()
+        return rsp
 
 class SccBLL:
     def __init__(self):

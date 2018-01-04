@@ -2,21 +2,21 @@ import requests # pip install requests
 import json
 from requests.exceptions import ConnectionError
 from utils.DateTime import DateTime
-from settings import URL, USER, PASSWD
+from setting import settings
 
 class ApiUrl:
     def __init__(self):
-        self.url = URL + "event/"
-        self.monitor = self.url + "monitor/"
-        self.running = self.url + "running/"
-        self.waiting = self.url + "waiting/"
-        self.completed = self.url + "completed/"
-        self.event_monitor = self.url + "event_monitor/"
-        self.scc = URL + "scc/"
+        self.url = settings.URL_EVENT
+        self.monitor = settings.URL_MONITOR
+        self.running = settings.URL_RUNNING
+        self.waiting = settings.URL_WAITING
+        self.completed = settings.URL_COMPLETED
+        self.event_monitor = settings.URL_EVENT_MONITOR
+        self.scc = settings.URL_SCC
 
     def get(self, url):
         try:
-            rsp = requests.get(url, auth=HTTPBasicAuth(USER, PASSWD), timeout=5)
+            rsp = requests.get(url, auth=HTTPBasicAuth(settings.USER, settings.PASSWD), timeout=5)
         except ConnectionError as e:
             return e
         if rsp.status_code == 200:
@@ -28,7 +28,7 @@ class ApiUrl:
 
     def put(self, url, data):
         try:
-            rsp = requests.put(url, json = data, auth=HTTPBasicAuth(USER, PASSWD), timeout=5)
+            rsp = requests.put(url, json = data, auth=HTTPBasicAuth(settings.USER, settings.PASSWD), timeout=5)
         except ConnectionError as e:
             return e
         if rsp.status_code == 200:
@@ -40,7 +40,7 @@ class ApiUrl:
 
     def post(self, url, data):
         try:
-            rsp = requests.put(url, json = data, auth=HTTPBasicAuth(USER, PASSWD), timeout=5)
+            rsp = requests.put(url, json = data, auth=HTTPBasicAuth(settings.USER, settings.PASSWD), timeout=5)
         except ConnectionError as e:
             return e
         if rsp.status_code == 200:
@@ -70,24 +70,26 @@ class EventDAL:
         return self.api_url.get(self.api_url.monitor + str(pk) + "/")
 
 class EventMonitorDAL:
+    def __init__(self):
+        self.api_url = ApiUrl()
+
     def put(self, pk, data):
-        api_url = ApiUrl()
-        url = api_url.event_monitor + str(pk) + "/"
-        rsp = api_url.put(url, data)
+        url = self.api_url.event_monitor + str(pk) + "/"
+        rsp = self.api_url.put(url, data)
         return rsp
 
     def get(self, pk=None):
-        api_url = ApiUrl()
         if pk:
-            url = api_url.event_monitor + str(pk) + "/"
+            url = self.api_url.event_monitor + str(pk) + "/"
         else:
-            url = api_url.event_monitor
-        rsp = api_url.get(url)
+            url = self.api_url.event_monitor
+        rsp = self.api_url.get(url)
         return rsp
 
 class SccDAL:
     def __init__(self):
         self.api_url = ApiUrl()
+
     def post(self, data):
         return self.api_url.post(self.api_url.scc, data)
         

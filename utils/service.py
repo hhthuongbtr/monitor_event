@@ -1,12 +1,10 @@
-import re, os, sys, signal
-import time
 import json
-import requests # pip install requests
 import threading
+import subprocess # pip install subprocess.run
+import re, os, sys, signal
 from setting.settings import LIMIT_PING_TIME
 from utils.DateTime import DateTime
-import subprocess # pip install subprocess.run
-from DAL.eventDAL import EventMonitorDAL
+from DAL.eventBLL import EventMonitorBLL
 from BLL.eventBLL import SccBLL
 
 
@@ -86,9 +84,9 @@ class Service:
         date_time = DateTime()
         args.append({
             'ishost'            : ishost,
-            'queueServiceName'  : self.my_event["service_check_name"],
+            'queueServiceName'  : 'TEST' + self.my_event["service_check_name"],
             'queueHost'         : self.my_event["encoder"] + '-' + self.my_event["event_name"], 
-            'msg'               : msg,
+            'msg'               : 'TEST' + msg,
             'AlertStatus'       : AlertStatus
             })
         data = json.dumps(args)
@@ -98,10 +96,11 @@ class Service:
         return 0
 
     def update_status(self, status):
-        event_monitor = EventMonitorDAL()
+        event_monitor = EventMonitorBLL()
         date_time = DateTime()
         now = date_time.get_now()
         data = {"status": int(status), "last_update": now}
+        data = json.dumps(data)
         rsp = event_monitor.put(self.my_event["id"], data)
 
 
