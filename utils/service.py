@@ -80,16 +80,14 @@ class Service:
         return CRITICAL, message
 
     def push_notification(self, ishost, AlertStatus, msg):
-        args = []
         date_time = DateTime()
-        args.append({
+        data = {
             'ishost'            : ishost,
             'queueServiceName'  : 'TEST' + self.my_event["service_check_name"],
             'queueHost'         : self.my_event["encoder"] + '-' + self.my_event["event_name"], 
             'msg'               : 'TEST' + msg,
             'AlertStatus'       : AlertStatus
-            })
-        data = json.dumps(args)
+        }
         scc = SccBLL()
         rsp = scc.post(data)
         print rsp
@@ -99,7 +97,10 @@ class Service:
         event_monitor = EventMonitorBLL()
         date_time = DateTime()
         now = date_time.get_now()
-        data = {"status": int(status), "last_update": now}
+        data = {
+            "status": int(status),
+            "last_update": now
+        }
         rsp = event_monitor.put(self.my_event["id"], data)
 
 
