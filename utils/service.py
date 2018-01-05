@@ -91,8 +91,8 @@ class Service:
             })
         data = json.dumps(args)
         scc = SccBLL()
-        scc.post(data)
-        print data
+        rsp = scc.post(data)
+        print rsp
         return 0
 
     def update_status(self, status):
@@ -100,7 +100,6 @@ class Service:
         date_time = DateTime()
         now = date_time.get_now()
         data = {"status": int(status), "last_update": now}
-        print "update status " + str(data)
         rsp = event_monitor.put(self.my_event["id"], data)
 
 

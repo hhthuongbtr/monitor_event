@@ -1,6 +1,7 @@
 import requests # pip install requests
 import json
 from requests.exceptions import ConnectionError
+from requests.auth import HTTPBasicAuth
 from utils.DateTime import DateTime
 from setting import settings
 

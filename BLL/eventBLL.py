@@ -26,7 +26,7 @@ class EventMonitorBLL:
         self.event_monitor = EventMonitorDAL()
 
     def put(self, pk, data):
-        rsp = self.event_monitor.put(url, data)
+        rsp = self.event_monitor.put(pk, data)
         return rsp
 
     def get(self, pk=None):
