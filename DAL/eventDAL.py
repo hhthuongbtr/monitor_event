@@ -25,7 +25,7 @@ class ApiUrl:
         elif rsp.status_code >= 500:
             return "Check your proxy or web services"
         else:
-            return "Unknow"
+            return rsp.status_code 
 
     def put(self, url, data):
         try:
@@ -37,7 +37,7 @@ class ApiUrl:
         elif rsp.status_code >= 500:
             return "Check your proxy or web services"
         else:
-            return "Unknow"
+            return rsp.status_code 
 
     def post(self, url, data):
         try:
@@ -49,7 +49,7 @@ class ApiUrl:
         elif rsp.status_code >= 500:
             return "Check your proxy or web services"
         else:
-            return "Unknow"
+            return rsp.status_code 
 
 class EventDAL:
     def __init__(self):
