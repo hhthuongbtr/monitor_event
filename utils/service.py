@@ -4,7 +4,7 @@ import subprocess # pip install subprocess.run
 import re, os, sys, signal
 from setting.settings import LIMIT_PING_TIME
 from utils.DateTime import DateTime
-from DAL.eventBLL import EventMonitorBLL
+from BLL.eventBLL import EventMonitorBLL
 from BLL.eventBLL import SccBLL
 
 
@@ -100,7 +100,7 @@ class Service:
         date_time = DateTime()
         now = date_time.get_now()
         data = {"status": int(status), "last_update": now}
-        data = json.dumps(data)
+        print "update status " + str(data)
         rsp = event_monitor.put(self.my_event["id"], data)
 
 
@@ -129,3 +129,4 @@ class Service:
     def check_source(self):
         print 'hahaha'
         return 0
+        

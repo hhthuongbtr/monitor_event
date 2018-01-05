@@ -1,5 +1,5 @@
+import datetime
 import time
-from datetime import datetime
 import re
 
 
@@ -32,3 +32,11 @@ class DateTime:
 
     def get_now_as_human_creadeble(self):
         return (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+
+    def convert_unix_timestamp_2_human_creadeble(self, timestamp):
+        return (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(timestamp))))
+
+    def get_now_as_isofortmat(self):
+        now = datetime.datetime.now()
+        format_iso_now = now.isoformat()
+        return format_iso_now

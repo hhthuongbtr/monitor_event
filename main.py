@@ -41,7 +41,9 @@ class Handle:
         if is_json(data):
             data = json.loads(data)
             if len(data):
-                data = data[0]
+                print "update data"
+                print data
+                data = data['monitor'][0]
                 self.my_event = data
             else:
                 event_monitor = EventMonitorDAL()
@@ -102,6 +104,9 @@ def is_json(myjson):
     return True
 
 if __name__ == "__main__":
+    date_time = DateTime()
+    now = date_time.get_now()
+    print str(now)
     while 1:
         print "main"
         try:
