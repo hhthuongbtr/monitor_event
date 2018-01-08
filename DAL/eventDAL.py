@@ -25,31 +25,31 @@ class ApiUrl:
         elif rsp.status_code >= 500:
             return "Check your proxy or web services"
         else:
-            return rsp.status_code 
+            return rsp.status_code
 
     def put(self, url, data):
         try:
             rsp = requests.put(url, json = data, auth=HTTPBasicAuth(settings.USER, settings.PASSWD), timeout=5)
         except ConnectionError as e:
             return e
-        if rsp.status_code == 200:
+        if rsp.status_code == 202:
             return rsp.text
         elif rsp.status_code >= 500:
             return "Check your proxy or web services"
         else:
-            return rsp.status_code 
+            return rsp.status_code
 
     def post(self, url, data):
         try:
-            rsp = requests.put(url, json = data, auth=HTTPBasicAuth(settings.USER, settings.PASSWD), timeout=5)
+            rsp = requests.post(url, json = data, auth=HTTPBasicAuth(settings.USER, settings.PASSWD), timeout=5)
         except ConnectionError as e:
             return e
-        if rsp.status_code == 200:
+        if rsp.status_code == 202:
             return rsp.text
         elif rsp.status_code >= 500:
             return "Check your proxy or web services"
         else:
-            return rsp.status_code 
+            return rsp.status_code
 
 class EventDAL:
     def __init__(self):
@@ -93,5 +93,4 @@ class SccDAL:
 
     def post(self, data):
         return self.api_url.post(self.api_url.scc, data)
-        
         

@@ -1,13 +1,14 @@
 #API
 USER = 'monitor'
 PASSWD = 'iptv13579'
+REGION = 'HCM'
 URL = 'http://10.0.200.99:8888/'
-URL_EVENT = 'http://10.0.200.99:8888/event/'
-URL_MONITOR = 'http://10.0.200.99:8888/event/monitor/'
-URL_RUNNING = 'http://10.0.200.99:8888/event/running/'
-URL_WAITING = 'http://10.0.200.99:8888/event/waiting/'
-URL_COMPLETED = 'http://10.0.200.99:8888/event/completed/'
-URL_EVENT_MONITOR = 'http://10.0.200.99:8888/event/event_monitor/'
+URL_EVENT = URL + 'event/'
+URL_MONITOR = URL_EVENT + 'monitor/'
+URL_RUNNING = URL_EVENT + REGION + '/running/'
+URL_WAITING = URL_EVENT + REGION + '/waiting/'
+URL_COMPLETED = URL_EVENT + REGION + '/completed/'
+URL_EVENT_MONITOR = URL_EVENT + 'event_monitor/'
 URL_SCC = 'http://10.0.200.99:8888/scc/'
 
 #limit ping time

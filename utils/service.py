@@ -88,6 +88,9 @@ class Service:
             'msg'               : 'TEST' + msg,
             'AlertStatus'       : AlertStatus
         }
+        print data
+        data = json.dumps(data)
+        print data
         scc = SccBLL()
         rsp = scc.post(data)
         print rsp
@@ -112,7 +115,7 @@ class Service:
     def check_ping(self):
         status = 0
         msg = ''
-        ishost = 'true'
+        ishost = True
         check = self.ping_host()
         status = check[0]
         msg = check[1]
@@ -129,4 +132,3 @@ class Service:
     def check_source(self):
         print 'hahaha'
         return 0
-        

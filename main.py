@@ -41,8 +41,6 @@ class Handle:
         if is_json(data):
             data = json.loads(data)
             if len(data):
-                print "update data"
-                print data
                 data = data['monitor'][0]
                 self.my_event = data
             else:
@@ -65,12 +63,10 @@ class Handle:
         self.my_event["pid"] = int(pid)
         data = {"pid": int(pid)}
         rsp = event_monitor.put(self.my_event["id"], data)
-        print rsp
         date_time = DateTime()
         now = date_time.get_now()
-        print str(now) + " >= " + str(self.my_event["start_date"]) + " and " + str(now) + " <= " + str(self.my_event["end_date"])
+        #print str(now) + " >= " + str(self.my_event["start_date"]) + " and " + str(now) + " <= " + str(self.my_event["end_date"])
         while (now >= int(self.my_event["start_date"]) and now <= int(self.my_event["end_date"]) and self.my_event['active']):
-            print now
             change = None
             data_expire_time = now + DATA_EXPIRE_TIME * 60
             service_check = Service(self.my_event)
@@ -94,6 +90,9 @@ class Handle:
                         break
             now = date_time.get_now()
             self.update_data()
+        #Up date PID affter expire time
+        json_data = {"pid": 0}
+        rsp = event_monitor.put(self.my_event["id"], json_data)
         return 0
 
 def is_json(myjson):
@@ -104,32 +103,34 @@ def is_json(myjson):
     return True
 
 if __name__ == "__main__":
-    date_time = DateTime()
-    now = date_time.get_now()
-    print str(now)
-    while 1:
-        print "main"
-        try:
-            '''
-            get list event from api
-            '''
-            event = EventBLL()
-            event_running_list = event.get_running_event_monitor_list()
-        except Exception as e:
-            raise ValueError(e)
-        if is_json(event_running_list):
-            '''
-            Decode event as json fortmat
-            if data not as json fortmat: sleaap 60s and raise error
-            '''
-            event_running_list = json.loads(event_running_list)
-            for event_running in event_running_list:
-                if not event_running["pid"]:
-                    handle = Handle(event_running)
-                    t = threading.Thread(target=handle.service_check)
-                    t.start()
-                time.sleep(1)
-        else:    
-            print "Bug: load data " + str(event_running_list)
+    try:
+        '''
+        get list event from api
+        '''
+        event = EventBLL()
+        event_running_list = event.get_running_event_monitor_list()
+    except Exception as e:
+        time.sleep(30)
+        raise ValueError(e)
+    if is_json(event_running_list):
+        '''
+        Decode event as json fortmat
+        if data not as json fortmat: sleep 60s and raise error
+        '''
+        event_running_list = json.loads(event_running_list)
+        now = event_running_list['now']
+        event_running_list = event_running_list['monitor_running_list']
+        flag = False
+        for event_running in event_running_list:
+            if (not event_running["pid"]) or (now >= (int(event_running["last_update"]) + 300)):
+                handle = Handle(event_running)
+                handle.service_check()
+                flag = True
+                break
+        if flag:
+            time.sleep(1)
+        else:
+            time.sleep(60)
+    else:    
+        print "Bug: load data " + str(event_running_list)
         time.sleep(60)
-
